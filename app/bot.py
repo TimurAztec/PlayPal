@@ -4,7 +4,10 @@ from app.youtube import search_and_download_music
 import os
 
 async def start(update: Update, context: CallbackContext):
-    await update.message.reply_text("Hi! Send me the name of a song, and I'll fetch the MP3 for you!")
+    await update.message.reply_text("Hi! Send me the name of a song, and I'll fetch the MP3 for you! \nType /help for more info.")
+
+async def help(update: Update, context: CallbackContext):
+    await update.message.reply_text("/help for help.\n/settings to change playlist options\n\nTo find track you need best use format [Artist name] - [Song name]\nExample: Rick Astley - Never Gonna Give You Up ")
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_query = update.message.text
@@ -23,4 +26,5 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 def setup_dispatcher(dispatcher):
     dispatcher.add_handler(CommandHandler("start", start))
+    dispatcher.add_handler(CommandHandler("help", help))
     dispatcher.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))

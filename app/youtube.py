@@ -29,15 +29,20 @@ def search_and_download_music(query, output_path):
         with YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(search_url, download=True)
 
-            keywords = ['official music video', 'music video', 'song', 'track', 'audio', 'lyrics']
+            keywords = ['official music video', 'music video', 'song', 'track', 'audio', 'lyrics', 'lyric']
             is_music = False
 
-            tags = info.get('tags', [])
+            tags = info.get('entries')[0].get('tags', []) if info.get('playlist_count') else info.get('tags', [])
             if any(keyword in tag.lower() for tag in tags for keyword in keywords):
                 is_music = True
 
-            categories = info.get('categories', [])
+            categories = info.get('entries')[0].get('categories', []) if info.get('playlist_count') else info.get('categories', [])
             if 'Music' in categories:
+                is_music = True
+
+            description = info.get('entries')[0].get('description', []) if info.get('playlist_count') else info.get(
+                'description', [])
+            if 'Released on:' in description:
                 is_music = True
 
             if not is_music:
@@ -49,6 +54,8 @@ def search_and_download_music(query, output_path):
 
             if not os.path.exists(file_path):
                 base_name = os.path.basename(file_path).replace('.mp3', '')
+                if " - " in base_name:
+                    base_name = base_name.split(" - ")[-1]
                 found_file = None
                 for file in os.listdir(output_path):
                     if base_name in file:
