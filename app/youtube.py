@@ -56,9 +56,10 @@ def search_and_download_music(query, output_path):
                 base_name = os.path.basename(file_path).replace('.mp3', '')
                 if " - " in base_name:
                     base_name = base_name.split(" - ")[-1]
+                base_name = base_name.lower()
                 found_file = None
                 for file in os.listdir(output_path):
-                    if base_name in file:
+                    if base_name in file.lower():
                         found_file = os.path.join(output_path, file)
                         break
                 if not found_file:
